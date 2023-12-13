@@ -21,20 +21,25 @@ def get_diffs(seq):
 
 levels_all = []
 for seq in sequence:
+  # print(seq)
   reached_bottom = False
-  total_sum = 0
   levels = []
   while reached_bottom == False:
     levels.append(seq[-1])
     new_seq = get_diffs(seq)
-
-    if sum(new_seq) == 0:
+    # print(new_seq)
+    if new_seq.count(0) == len(new_seq):
       reached_bottom = True
     seq = new_seq
-
     
   print(f'Levels: {levels}\n')
-  levels_all.append(sum(levels))
+  levels_all.append(levels)
 
-print(levels_all)
-print(sum(levels_all))
+total = 0
+for lev in levels_all:
+  subtotal = 0
+  for i in range(len(lev)-1,-1,-1):
+    subtotal += lev[i]
+  total+=subtotal
+  
+print(total)
