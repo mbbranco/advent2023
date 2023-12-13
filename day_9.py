@@ -19,25 +19,22 @@ def get_diffs(seq):
     diffs.append(d)
   return diffs
 
-total_sum = 0
+levels_all = []
 for seq in sequence:
   reached_bottom = False
+  total_sum = 0
   levels = []
   while reached_bottom == False:
-    levels.append(seq)
+    levels.append(seq[-1])
     new_seq = get_diffs(seq)
+
     if sum(new_seq) == 0:
       reached_bottom = True
     seq = new_seq
 
-  phs = []
-  cumsum = 0
-  for j in range(len(levels)-1,-1,-1):
-    cl = levels[j][-1]
-    cumsum +=cl
-    phs.append(cumsum)
-  
-  # print(f'seq: {phs} | cumsum: {sum(phs)}')
-  total_sum += phs[-1]
-  # total_sum += 
-print(total_sum)
+    
+  print(f'Levels: {levels}\n')
+  levels_all.append(sum(levels))
+
+print(levels_all)
+print(sum(levels_all))
