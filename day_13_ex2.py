@@ -26,6 +26,7 @@ def check_sym(type_c):
   # check horizontal
   sym_result = {}
   for id_group, g in enumerate(groups):
+    print(f'\n\n{id_group}')
     ng = np.array(g)
     if type_c == 'horizontal':
       #nr rows
@@ -62,29 +63,48 @@ def check_sym(type_c):
       left_side_10 = np.char.replace(left_side, '#', '1')
       left_side_10 = np.char.replace(left_side_10, '.', '0')
       left_side_10 = left_side_10.astype(int)
-      right_side_rev_10 = np.char.replace(right_side, '#', '1')
+      
+      right_side_rev_10 = np.char.replace(right_side_reversed, '#', '1')
       right_side_rev_10 = np.char.replace(right_side_rev_10, '.', '0')
       right_side_rev_10 = right_side_rev_10.astype(int)
-      dif = left_side_10-right_side_rev_10
-      sum_dif = sum(dif)
-
-      nr_ones = sum(sum_dif==1)
-      nr_zeros = sum(sum_dif==0)
-  
-      if nr_ones==1 and nr_zeros==len(sum(dif))-1:
+      
+      dif = left_side_10 - right_side_rev_10
+      # print(left_side_10)
+      # print(right_side_rev_10)
+      # print(dif)
+      nr_lin_dif = 0
+      nr_lin_ok = 0
+      for d in dif:
+        nr_ones = sum(d==1)
+        nr_zeros = sum(d==0)
+        
+        if nr_zeros == len(d):
+          nr_lin_ok+=1
+        elif nr_ones==1 and nr_zeros==len(d)-1:
+          nr_lin_dif +=1
+        else:
+          break
+      
+      if nr_lin_dif == 1 and nr_lin_ok == len(dif)-1:
         # print('Smudge')
-        # print(left_side_10)
-        # print(right_side_rev_10)
+        print(dif)
+        sym_result[id_group] = len(left_window)
+        break
+      elif nr_lin_ok == len(dif):
+        # print('Symmetric')
         sym_result[id_group] = len(left_window)
 
+        
+            
   return sym_result
     
 
-horiz = check_sym('horizontal')
-vert = check_sym('vertical')
-print(horiz)
-print(vert)
+horiz_sym = check_sym('horizontal')
+vert_sym = check_sym('vertical')
+print(horiz_sym)
+print(vert_sym)
 
-mult_horiz = [100*x for x in horiz.values()]
-final_result = sum(mult_horiz)+sum(vert.values())
+
+mult_horiz = [100*x for x in horiz_sym.values()]
+final_result = sum(mult_horiz)+sum(vert_sym.values())
 print(final_result)
