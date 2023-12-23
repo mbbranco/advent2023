@@ -11,13 +11,12 @@ print(txt)
 
 pos = [0,0]
 result = [(0,0)]
-max_x = 0
-max_y = 0
+dict_row = {}
 for t in txt:
   direction = t[0]
   nr = int(t.split(" ")[1])
-  # print(direction,nr)
-  # print(pos)
+  print(direction,nr)
+  print(pos)
   if direction == 'R':
     new_pos = [pos[0],pos[1]+nr]
     range_x = [pos[0]]*(nr+1)
@@ -35,33 +34,26 @@ for t in txt:
     range_x = [pos[0]]*(nr+1)
     range_y = list(range(pos[1]-nr,pos[1]+1))
 
-  range_v = list(zip(range_x,range_y))
-  max_x = max(max(range_x),max_x)
-  max_y = max(max(range_y),max_y)
-  result.extend(range_v)
+
+  left = range_y[0]
+  right = range_y[-1]
+  for x in range_x:
+    if x in dict_row.keys():
+      val = dict_row[x]
+      dict_row[x] = (min(val[0],left),max(val[1],right))
+    else:
+      dict_row[x] = (left,right)
+
+  # result.extend(range_v)
   pos = new_pos
-
-
-finals = []
-final = ["."]*(max_y+1)
-for i in range(0,max_x+1):
-  finals.append(final)
-  
-finals = np.array(finals)
-for i in range(0,max_x+1):
-  for j in range(0,max_y+1):
-    pair = (i,j)
-    if pair in result:
-      finals[i,j] = "#"
-      
-print(finals)
+print(dict_row)
+# print(result)
+# print(sorted(result))
 
 nr_houses = 0
-for k in finals:
-  left = []
-  for i,l in enumerate(k):
-    if l == "#":
-      left.append(i)
-  nr_houses += max(left)-min(left)+1
+for k, val in dict_row.items():
+  dif = val[1]-val[0]+1
+  print(dif)
+  nr_houses+=abs(dif)
 
 print(nr_houses)
